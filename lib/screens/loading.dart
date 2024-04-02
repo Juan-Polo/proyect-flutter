@@ -21,17 +21,23 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        
+
         toolbarHeight: 100,
         leading: Image.asset(
           "assets/images/logo1.png",
-          height: 200,
+       height: 100.0,
+          
         ),
         title: const Text("Our Little World"),
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        backgroundColor: Color.fromARGB(255, 255, 152, 0),
         actions: const [Icon(Icons.search), Icon(Icons.person)],
       ),
       body: const UserList(),
+
+      bottomNavigationBar: MyFooter(),
+
     );
   }
 }
@@ -55,18 +61,15 @@ class UserList extends StatelessWidget {
               itemBuilder: (context, index) {
                 final userData = snapshot.data![index];
                 return ListTile(
-                  title: Text(userData['name'] ?? ''),
+      
+                  title:Text('Nombre: ${userData['name'] ?? ''}'),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Lastname: ${userData['lastname'] ?? ''}'),
+                      Text('Apellido: ${userData['lastname'] ?? ''}'),
                       Text('Email: ${userData['email'] ?? ''}'),
                       Text('Password: ${userData['password'] ?? ''}'),
-                      Image.network(
-                        'http://127.0.0.1:8000/${userData['image']}' ?? '',
-                        width: 100, // Ajusta el ancho según tus necesidades
-                        height: 100, // Ajusta el alto según tus necesidades
-                      ),
+                      
                     ],
                   ),
                 );
@@ -94,5 +97,83 @@ class UserList extends StatelessWidget {
       print('Error al realizar la solicitud HTTP: $e');
       return []; // Devuelve una lista vacía en caso de error
     }
+  }
+}
+
+
+
+
+
+
+class MyFooter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 250.0, // Define la altura deseada
+      padding: EdgeInsets.all(10.0),
+      color: const Color.fromARGB(255, 255, 152, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset(
+      'assets/images/pieniño.png',
+      width: 150, // Ancho deseado de la imagen
+      height: 150, // Alto deseado de la imagen
+    ),
+              _buildFooterIcon(Icons.audiotrack),
+              _buildFooterIcon(Icons.fingerprint),
+              _buildFooterIcon(Icons.call),
+
+              Image.asset(
+      'assets/images/pieniña.png',
+      width: 150, // Ancho deseado de la imagen
+      height: 150, // Alto deseado de la imagen
+    ),
+            ],
+
+          ),
+           const Text(
+            'Copyright ©2024, All Rights Reserved.',
+            style: TextStyle(
+              fontWeight: FontWeight.w300,
+              fontSize: 12.0,
+              color: Color(0xFF162A49),
+            ),
+          ),
+          const Text(
+            'Powered by Your Company',
+            style: TextStyle(
+              fontWeight: FontWeight.w300,
+              fontSize: 12.0,
+              color: Color(0xFF162A49),
+            ),
+          ),
+
+           
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooterIcon(IconData iconData) {
+    return Container(
+      height: 45.0,
+      width: 45.0,
+      child: Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.0),
+        ),
+        child: IconButton(
+          icon: Icon(iconData, size: 20.0,),
+          color: Color(0xFF162A49),
+          onPressed: () {},
+        ),
+      ),
+    );
   }
 }
