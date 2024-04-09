@@ -54,13 +54,13 @@ class HomePage extends StatelessWidget {
               ),
               child: Image.asset(
                 "assets/images/logo1.png",
-                height: 50.0, 
+                height: 50.0, // Tamaño deseado del logo
               ),
             ),
             ListTile(
               title: Text('Lista De Usuarios'),
               onTap: () {
-             
+                // Navegar a la vista de lista de usuarios
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => UserList()),
@@ -75,6 +75,18 @@ class HomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => MyData()),
                 );
               },
+            ),
+            ListTile(
+              title: Text('Perfil'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text('Contactanos'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text('Preguntas'),
+              onTap: () {},
             ),
           ],
         ),
@@ -138,11 +150,11 @@ class UserList extends StatelessWidget {
         return json.decode(response.body);
       } else {
         print('Error en la solicitud HTTP: ${response.statusCode}');
-        return []; 
+        return []; // Devuelve una lista vacía en caso de error
       }
     } catch (e) {
       print('Error al realizar la solicitud HTTP: $e');
-      return []; 
+      return []; // Devuelve una lista vacía en caso de error
     }
   }
 }
@@ -163,16 +175,16 @@ class MyFooter extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/pieniño.png',
-                width: 100,
-                height: 100, 
+                width: 100, // Ancho deseado de la imagen
+                height: 100, // Alto deseado de la imagen
               ),
               _buildFooterIcon(Icons.audiotrack),
               _buildFooterIcon(Icons.fingerprint),
               _buildFooterIcon(Icons.call),
               Image.asset(
                 'assets/images/pieniña.png',
-                width: 100, 
-                height: 100, 
+                width: 100, // Ancho deseado de la imagen
+                height: 100, // Alto deseado de la imagen
               ),
             ],
           ),
