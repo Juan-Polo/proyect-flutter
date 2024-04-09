@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:proyectflutter/screens/degrees.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -21,23 +23,64 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
-
         toolbarHeight: 100,
-        leading: Image.asset(
-          "assets/images/logo1.png",
-       height: 100.0,
-          
-        ),
         title: const Text("Our Little World"),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 255, 152, 0),
-        actions: const [Icon(Icons.search), Icon(Icons.person)],
+        actions: [
+          Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: Icon(Icons.menu),
+              );
+            },
+          ),
+        ],
+        leading: Image.asset(
+          "assets/images/logo1.png",
+          height: 100.0,
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 255, 152, 0),
+              ),
+              child: Image.asset(
+                "assets/images/logo1.png",
+                height: 50.0, // Tamaño deseado del logo
+              ),
+            ),
+            ListTile(
+              title: Text('Lista De Usuarios'),
+              onTap: () {
+                // Navegar a la vista de lista de usuarios
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserList()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Grados'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyData()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: const UserList(),
-
       bottomNavigationBar: MyFooter(),
-
     );
   }
 }
@@ -47,39 +90,43 @@ class UserList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: fetchData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          if (snapshot.data != null) {
-            return ListView.builder(
-              itemCount: snapshot.data?.length ?? 0,
-              itemBuilder: (context, index) {
-                final userData = snapshot.data![index];
-                return ListTile(
-      
-                  title:Text('Nombre: ${userData['name'] ?? ''}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Apellido: ${userData['lastname'] ?? ''}'),
-                      Text('Email: ${userData['email'] ?? ''}'),
-                      Text('Password: ${userData['password'] ?? ''}'),
-                      
-                    ],
-                  ),
-                );
-              },
-            );
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('User List'),
+      ),
+      body: FutureBuilder<List<dynamic>>(
+        future: fetchData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
           } else {
-            return const Center(child: Text('No data available'));
+            if (snapshot.data != null) {
+              return ListView.builder(
+                itemCount: snapshot.data?.length ?? 0,
+                itemBuilder: (context, index) {
+                  final userData = snapshot.data![index];
+                  return ListTile(
+                    title: Text('Nombre: ${userData['name'] ?? ''}'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Apellido: ${userData['lastname'] ?? ''}'),
+                        Text('Email: ${userData['email'] ?? ''}'),
+                        Text('Password: ${userData['password'] ?? ''}'),
+                        Text('Role: ${userData['role']['name'] ?? ''}'),
+                      ],
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(child: Text('No data available'));
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -100,11 +147,6 @@ class UserList extends StatelessWidget {
   }
 }
 
-
-
-
-
-
 class MyFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -115,28 +157,26 @@ class MyFooter extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-         children: [
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Image.asset(
-      'assets/images/pieniño.png',
-      width: 150, // Ancho deseado de la imagen
-      height: 150, // Alto deseado de la imagen
-    ),
+                'assets/images/pieniño.png',
+                width: 100, // Ancho deseado de la imagen
+                height: 100, // Alto deseado de la imagen
+              ),
               _buildFooterIcon(Icons.audiotrack),
               _buildFooterIcon(Icons.fingerprint),
               _buildFooterIcon(Icons.call),
-
               Image.asset(
-      'assets/images/pieniña.png',
-      width: 150, // Ancho deseado de la imagen
-      height: 150, // Alto deseado de la imagen
-    ),
+                'assets/images/pieniña.png',
+                width: 100, // Ancho deseado de la imagen
+                height: 100, // Alto deseado de la imagen
+              ),
             ],
-
           ),
-           const Text(
+          const Text(
             'Copyright ©2024, All Rights Reserved.',
             style: TextStyle(
               fontWeight: FontWeight.w300,
@@ -152,8 +192,6 @@ class MyFooter extends StatelessWidget {
               color: Color(0xFF162A49),
             ),
           ),
-
-           
         ],
       ),
     );
@@ -169,7 +207,10 @@ class MyFooter extends StatelessWidget {
           borderRadius: BorderRadius.circular(25.0),
         ),
         child: IconButton(
-          icon: Icon(iconData, size: 20.0,),
+          icon: Icon(
+            iconData,
+            size: 20.0,
+          ),
           color: Color(0xFF162A49),
           onPressed: () {},
         ),
